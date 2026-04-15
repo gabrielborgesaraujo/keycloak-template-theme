@@ -1,59 +1,26 @@
 <#import "template.ftl" as layout>
-<@layout.registrationLayout; section>
+<@layout.registrationLayout displayMessage=false; section>
     <#if section = "header">
-        <#if message??>
-            ${message.summary}
+        <#if messageHeader??>
+            ${kcSanitize(msg("${messageHeader}"))?no_esc}
         <#else>
-            ${msg("infoTitle")}
+            ${message.summary}
         </#if>
     <#elseif section = "form">
-        <div class="kc-card">
-            <!-- Header -->
-            <div class="kc-header">
-                <h1>
-                    <#if message??>
-                        ${message.summary}
-                    <#else>
-                        ${msg("infoTitle")}
-                    </#if>
-                </h1>
+        <div class="space-y-4">
+            <div class="kc-alert kc-alert-info">
+                <p>${kcSanitize(message.summary)?no_esc}<#if requiredActions??><#list requiredActions>: <strong><#items as reqActionItem>${kcSanitize(msg("requiredAction.${reqActionItem}"))?no_esc}<#sep>, </#items></strong></#list></#if></p>
             </div>
-
-            <!-- Info message -->
-            <#if message??>
-                <div class="kc-alert-info" role="alert">
-                    ${message.summary}
-                </div>
-            </#if>
-
-            <!-- Required actions -->
-            <#if requiredActions?? && requiredActions?has_content>
-                <div class="mt-6">
-                    <p class="text-sm font-medium text-gray-700 mb-3">${msg("requiredActions")}</p>
-                    <ul class="space-y-2">
-                        <#list requiredActions as action>
-                            <li class="text-sm text-gray-600">${action}</li>
-                        </#list>
-                    </ul>
-                </div>
-            </#if>
-
-            <!-- Action buttons -->
-            <#if actionUri??>
-                <div class="mt-6">
-                    <a href="${actionUri}" class="kc-btn kc-btn-primary">
-                        ${msg("proceed")}
-                    </a>
-                </div>
-            </#if>
-
-            <#if skipLink??>
-                <#else>
-                    <#if client?? && client.baseUrl??>
-                        <div class="mt-6 text-center">
-                            <a class="kc-link" href="${client.baseUrl}">${msg("backToApplication")}</a>
-                        </div>
+            <#if !skipLink??>
+                <div class="flex flex-wrap gap-4 text-sm">
+                    <#if pageRedirectUri?has_content>
+                        <a class="kc-link" href="${pageRedirectUri}">${kcSanitize(msg("backToApplication"))?no_esc}</a>
+                    <#elseif actionUri?has_content>
+                        <a class="kc-link" href="${actionUri}">${kcSanitize(msg("proceedWithAction"))?no_esc}</a>
+                    <#elseif client?? && client.baseUrl?has_content>
+                        <a class="kc-link" href="${client.baseUrl}">${kcSanitize(msg("backToApplication"))?no_esc}</a>
                     </#if>
+                </div>
             </#if>
         </div>
     </#if>

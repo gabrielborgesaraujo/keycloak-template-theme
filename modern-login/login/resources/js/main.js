@@ -40,8 +40,8 @@
       });
     });
 
-    // Auto-hide alerts after 5 seconds
-    const alerts = document.querySelectorAll('.kc-alert');
+    // Keep error and warning messages visible so auth failures are not missed.
+    const alerts = document.querySelectorAll('.kc-alert-info, .kc-alert-success');
     alerts.forEach(function(alert) {
       setTimeout(function() {
         alert.style.transition = 'opacity 0.5s ease-out';

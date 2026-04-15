@@ -3,34 +3,17 @@
     <#if section = "header">
         ${msg("logoutConfirmTitle")}
     <#elseif section = "form">
-        <div class="kc-card">
-            <!-- Header -->
-            <div class="kc-header">
-                <h1>${msg("logoutConfirmTitle")}</h1>
-                <p>${msg("logoutConfirmTitle")}</p>
+        <div class="space-y-4">
+            <div class="kc-alert kc-alert-info">
+                ${msg("logoutConfirmHeader")}
             </div>
-
-            <!-- Confirmation message -->
-            <div class="kc-alert-info" role="alert">
-                ${msg("logoutConfirmDefault")}
-            </div>
-
-            <!-- Logout form -->
-            <form action="${url.logoutConfirmAction}" method="post">
+            <form class="kc-form" action="${url.logoutConfirmAction}" onsubmit="confirmLogout.disabled = true; return true;" method="POST">
                 <input type="hidden" name="session_code" value="${logoutConfirm.code}">
-                <div class="mt-6">
-                    <button class="kc-btn kc-btn-primary" type="submit">
-                        ${msg("doLogout")}
-                    </button>
-                </div>
+                <button class="kc-btn kc-btn-primary" name="confirmLogout" id="kc-logout" type="submit">${msg("doLogout")}</button>
             </form>
-
-            <!-- Cancel link -->
-            <div class="mt-4 text-center">
-                <a class="kc-link" href="${url.logoutConfirmAction}?session_code=${logoutConfirm.code}&confirm=cancel">
-                    ${msg("doCancel")}
-                </a>
-            </div>
+            <#if !logoutConfirm.skipLink && (client.baseUrl)?has_content>
+                <a class="kc-link text-sm" href="${client.baseUrl}">${kcSanitize(msg("backToApplication"))?no_esc}</a>
+            </#if>
         </div>
     </#if>
 </@layout.registrationLayout>
